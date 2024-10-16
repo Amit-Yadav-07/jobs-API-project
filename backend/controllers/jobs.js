@@ -40,14 +40,13 @@ const createJob = async (req, res) => {
 // update job
 const updateJob = async (req, res) => {
 
-    console.log(req.body);
     const { body: { company, position }, user: { userId }, params: { id: jobId } } = req;
 
     if (!company || !position) {
         return res.status(StatusCodes.BAD_REQUEST).json({ msg: "company or position can't be empty" })
     }
 
-    const job = Job.findByIdAndDelete({ _id: jobId, createdBy: userId }, req.body, { new: true, runValidators: true })
+    const job = await Job.findByIdAndUpdate({ _id: jobId, createdBy: userId }, req.body, { new: true, runValidators: true })
 
     if (!job) {
         return res.status(StatusCodes.NOT_FOUND).json({ msg: `no job with id ${jobId}` });
